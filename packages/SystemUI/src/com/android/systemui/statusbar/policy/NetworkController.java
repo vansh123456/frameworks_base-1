@@ -85,6 +85,8 @@ public interface NetworkController extends CallbackController<SignalCallback>, D
         default void setIsAirplaneMode(IconState icon) {}
 
         default void setMobileDataEnabled(boolean enabled) {}
+
+        default void setImsIcon(ImsIconState icon) {}
     }
 
     public interface EmergencyListener {
@@ -92,9 +94,9 @@ public interface NetworkController extends CallbackController<SignalCallback>, D
     }
 
     public static class IconState {
-        public final boolean visible;
-        public final int icon;
-        public final String contentDescription;
+        public boolean visible;
+        public int icon;
+        public String contentDescription;
 
         public IconState(boolean visible, int icon, String contentDescription) {
             this.visible = visible;
@@ -105,6 +107,25 @@ public interface NetworkController extends CallbackController<SignalCallback>, D
         public IconState(boolean visible, int icon, int contentDescription,
                 Context context) {
             this(visible, icon, context.getString(contentDescription));
+        }
+    }
+
+    public static class ImsIconState {
+        public boolean visible;
+        public int icon;
+        public int icon2;
+        public String contentDescription;
+
+        public ImsIconState(boolean visible, boolean visible2, int icon, int icon2, String contentDescription) {
+            this.visible = visible || visible2;
+            this.icon = icon;
+            this.icon2 = icon2;
+            this.contentDescription = contentDescription;
+        }
+
+        public ImsIconState(boolean visible, boolean visible2, int icon, int icon2, int contentDescription,
+                Context context) {
+            this(visible, visible2, icon, icon2, context.getString(contentDescription));
         }
     }
 
