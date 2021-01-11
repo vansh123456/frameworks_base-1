@@ -41,6 +41,7 @@ class TelephonyIcons {
     static final int ICON_5G_PLUS = R.drawable.ic_5g_plus_mobiledata;
     static final int ICON_VOWIFI = R.drawable.ic_vowifi;
     static final int ICON_VOWIFI_CALLING = R.drawable.ic_vowifi_calling;
+    static final int ICON_DATA_DISABLED = R.drawable.stat_sys_data_disabled;
 
     static final MobileIconGroup CARRIER_NETWORK_CHANGE = new MobileIconGroup(
             "CARRIER_NETWORK_CHANGE",
@@ -258,7 +259,7 @@ class TelephonyIcons {
             0,
             AccessibilityContentDescriptions.PHONE_SIGNAL_STRENGTH[0],
             R.string.cell_data_off_content_description,
-            0,
+            TelephonyIcons.ICON_DATA_DISABLED,
             false);
 
     static final MobileIconGroup NOT_DEFAULT_DATA = new MobileIconGroup(
