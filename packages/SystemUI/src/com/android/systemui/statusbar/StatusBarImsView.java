@@ -44,20 +44,6 @@ public class StatusBarImsView extends FrameLayout implements
         StatusIconDisplayable {
     private static final String TAG = "StatusBarImsView";
 
-    List<Integer> VOLTE_ICONS = new ArrayList<>(
-            Arrays.asList(R.drawable.stat_sys_volte_slot12,
-                    R.drawable.stat_sys_volte_slot1,
-                    R.drawable.stat_sys_volte_slot2,
-                    R.drawable.stat_sys_volte)
-    );
-
-    List<Integer> VOWIFI_ICONS = new ArrayList<>(
-            Arrays.asList(R.drawable.stat_sys_vowifi_slot12,
-                    R.drawable.stat_sys_vowifi_slot1,
-                    R.drawable.stat_sys_vowifi_slot2,
-                    R.drawable.stat_sys_vowifi)
-    );
-
     private ImsIconState mState;
     private LinearLayout mImsGroup;
     private ImageView mVowifiIcon;
@@ -148,24 +134,14 @@ public class StatusBarImsView extends FrameLayout implements
 
     private void initViewState(ImsIconState state) {
         setContentDescription(state.contentDescription);
-        if (state.icon > 0) {
-            mVolteIcon.setImageDrawable(mContext.getDrawable(state.icon));
-            mVolteIcon.setVisibility(View.VISIBLE);
-        } else {
+        if (state.vowifiVisible) {
             mVolteIcon.setVisibility(View.GONE);
-        }
-        if (state.icon2 > 0) {
-            mVowifiIcon.setImageDrawable(mContext.getDrawable(state.icon2));
+            mVowifiIcon.setImageDrawable(mContext.getDrawable(state.vowifiIcon));
             mVowifiIcon.setVisibility(View.VISIBLE);
-            if (VOWIFI_ICONS.indexOf(state.icon2) == VOLTE_ICONS.indexOf(state.icon)) {
-                mVolteIcon.setVisibility(View.GONE);
-            } else if (VOWIFI_ICONS.indexOf(state.icon2) == 2 && VOLTE_ICONS.indexOf(state.icon) == 0) {
-                mVolteIcon.setImageDrawable(mContext.getDrawable(VOLTE_ICONS.get(1)));
-            } else if (VOWIFI_ICONS.indexOf(state.icon2) == 1 && VOLTE_ICONS.indexOf(state.icon) == 0) {
-                mVolteIcon.setImageDrawable(mContext.getDrawable(VOLTE_ICONS.get(2)));
-            }
-        } else {
+        } else if (state.volteVisible) {
             mVowifiIcon.setVisibility(View.GONE);
+            mVolteIcon.setImageDrawable(mContext.getDrawable(state.volteIcon));
+            mVolteIcon.setVisibility(View.VISIBLE);
         }
         setVisibility(state.visible ? View.VISIBLE : View.GONE);
     }

@@ -94,9 +94,9 @@ public interface NetworkController extends CallbackController<SignalCallback>, D
     }
 
     public static class IconState {
-        public boolean visible;
-        public int icon;
-        public String contentDescription;
+        public final boolean visible;
+        public final int icon;
+        public final String contentDescription;
 
         public IconState(boolean visible, int icon, String contentDescription) {
             this.visible = visible;
@@ -112,20 +112,24 @@ public interface NetworkController extends CallbackController<SignalCallback>, D
 
     public static class ImsIconState {
         public boolean visible;
-        public int icon;
-        public int icon2;
+        public boolean volteVisible;
+        public boolean vowifiVisible;
+        public int volteIcon;
+        public int vowifiIcon;
         public String contentDescription;
 
-        public ImsIconState(boolean visible, boolean visible2, int icon, int icon2, String contentDescription) {
-            this.visible = visible || visible2;
-            this.icon = icon;
-            this.icon2 = icon2;
+        public ImsIconState(boolean volteVisible, boolean vowifiVisible, int volteIcon, int vowifiIcon, String contentDescription) {
+            this.visible = volteVisible || vowifiVisible;
+            this.volteVisible  = volteVisible;
+            this.vowifiVisible = vowifiVisible;
+            this.volteIcon = volteIcon;
+            this.vowifiIcon = vowifiIcon;
             this.contentDescription = contentDescription;
         }
 
-        public ImsIconState(boolean visible, boolean visible2, int icon, int icon2, int contentDescription,
+        public ImsIconState(boolean volteVisible, boolean vowifiVisible, int volteIcon, int vowifiIcon, int contentDescription,
                 Context context) {
-            this(visible, visible2, icon, icon2, context.getString(contentDescription));
+            this(volteVisible, vowifiVisible, volteIcon, vowifiIcon, context.getString(contentDescription));
         }
     }
 
