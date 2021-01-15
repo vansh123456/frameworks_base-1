@@ -177,7 +177,7 @@ public class StatusBarMobileView extends FrameLayout implements DarkReceiver,
         }
 
         mMobileInOut.setImageResource(getInOutIndicator(mState.activityIn, mState.activityOut));
-        mMobileInOut.setVisibility(mState.typeId > 0 ? View.VISIBLE : View.GONE);
+        mMobileInOut.setVisibility((mState.typeId != R.drawable.stat_sys_data_disabled && mState.typeId > 0) ? View.VISIBLE : View.GONE);
         updateMobileIconPadding();
         updateInOutIndicatorPadding();
     }
@@ -208,7 +208,7 @@ public class StatusBarMobileView extends FrameLayout implements DarkReceiver,
         }
 
         mMobileInOut.setImageResource(getInOutIndicator(state.activityIn, state.activityOut));
-        mMobileInOut.setVisibility(state.typeId > 0 ? View.VISIBLE : View.GONE);
+        mMobileInOut.setVisibility((state.typeId != R.drawable.stat_sys_data_disabled && mState.typeId > 0) ? View.VISIBLE : View.GONE);
 
         if (mState.volteId != state.volteId) {
             if (state.volteId != 0) {
