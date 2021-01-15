@@ -71,7 +71,7 @@ public class MobileSignalController extends SignalController<
         MobileSignalController.MobileState, MobileSignalController.MobileIconGroup> {
 
     private static final String IMS_STATUS_CHANGED = "android.intent.action.IMS_REGISTRATION_CHANGED";
-
+    private static final String TAG = "MobileSignalController";
     private final TelephonyManager mPhone;
     private final SubscriptionDefaults mDefaults;
     private final String mNetworkNameDefault;
@@ -102,8 +102,6 @@ public class MobileSignalController extends SignalController<
     private ImsManager mImsManager;
     private FeatureConnector<ImsManager> mFeatureConnector;
     private int mCallState = TelephonyManager.CALL_STATE_IDLE;
-
-    private int mImsTransportType = 0;
 
     // TODO: Reduce number of vars passed in, if we have the NetworkController, probably don't
     // need listener lists anymore.
@@ -513,8 +511,11 @@ public class MobileSignalController extends SignalController<
                 mCurrentState.roaming);
     }
 
-    public boolean isVolteShowing() {
-        return mConfig.showVolteIcon && isVolteSwitchOn() && mCurrentState.imsRegistered;
+    public boolean isVolteAvailable() {
+        boolean volte = mConfig.showVolteIcon && isVolteSwitchOn() && mCurrentState.imsRegistered
+                   && (mCurrentState.voiceCapable || mCurrentState.videoCapable);
+        Log.w(TAG, "isVolteShowing="+volte);
+        return volte;
     }
 
     @Override
@@ -729,11 +730,16 @@ public class MobileSignalController extends SignalController<
         return mCallState == TelephonyManager.CALL_STATE_IDLE;
     }
 
+    private int getDataNetworkType() {
+        return mServiceState != null ?
+                mServiceState.getDataNetworkType() : TelephonyManager.NETWORK_TYPE_UNKNOWN;
+    }
+
     public boolean isVowifiAvailable() {
-        return mCurrentState.voiceCapable &&  mCurrentState.imsRegistered
-                && ((mServiceState != null && mServiceState.getDataNetworkType()
-                == TelephonyManager.NETWORK_TYPE_IWLAN)
-                || mImsTransportType == AccessNetworkConstants.TRANSPORT_TYPE_WLAN);
+        boolean vowifi = mCurrentState.voiceCapable &&  mCurrentState.imsRegistered
+                && getDataNetworkType() == TelephonyManager.NETWORK_TYPE_IWLAN;
+        Log.w(TAG, "isVowifiAvailable="+vowifi);
+        return vowifi;
     }
 
     private MobileIconGroup getVowifiIconGroup() {
@@ -845,6 +851,7 @@ public class MobileSignalController extends SignalController<
                     config.isCapable(MmTelFeature.MmTelCapabilities.CAPABILITY_TYPE_VIDEO);
             Log.d(mTag, "onCapabilitiesStatusChanged isVoiceCapable=" + mCurrentState.voiceCapable
                     + " isVideoCapable=" + mCurrentState.videoCapable);
+            mContext.sendBroadcast(new Intent(IMS_STATUS_CHANGED));
             notifyListenersIfNecessary();
         }
     };
@@ -855,7 +862,6 @@ public class MobileSignalController extends SignalController<
                 public void onRegistered(int imsTransportType) {
                     Log.d(mTag, "onRegistered imsTransportType=" + imsTransportType);
                     mCurrentState.imsRegistered = true;
-                    mImsTransportType = imsTransportType;
                     mContext.sendBroadcast(new Intent(IMS_STATUS_CHANGED));
                     notifyListenersIfNecessary();
                 }
@@ -864,6 +870,7 @@ public class MobileSignalController extends SignalController<
                 public void onRegistering(int imsTransportType) {
                     Log.d(mTag, "onRegistering imsTransportType=" + imsTransportType);
                     mCurrentState.imsRegistered = false;
+                    mContext.sendBroadcast(new Intent(IMS_STATUS_CHANGED));
                     notifyListenersIfNecessary();
                 }
 

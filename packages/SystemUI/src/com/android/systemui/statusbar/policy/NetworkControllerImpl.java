@@ -537,8 +537,8 @@ public class NetworkControllerImpl extends BroadcastReceiver
         boolean showVolte = true;
         boolean showVowifi = true;
         if (mMobileSignalControllers.size() == 2) {
-            boolean volte1 = mMobileSignalControllers.valueAt(0).isVolteShowing();
-            boolean volte2 = mMobileSignalControllers.valueAt(1).isVolteShowing();
+            boolean volte1 = mMobileSignalControllers.valueAt(0).isVolteAvailable();
+            boolean volte2 = mMobileSignalControllers.valueAt(1).isVolteAvailable();
             boolean vowifi1 = mMobileSignalControllers.valueAt(0).isVowifiAvailable();
             boolean vowifi2 = mMobileSignalControllers.valueAt(1).isVowifiAvailable();
             cb.setImsIcon(new ImsIconState((volte1 || volte2) && showVolte,
@@ -549,8 +549,9 @@ public class NetworkControllerImpl extends BroadcastReceiver
                     mContext
             ));
         } else if (mMobileSignalControllers.size() == 1) {
-            boolean volte = mMobileSignalControllers.valueAt(0).isVolteShowing();
+            boolean volte = mMobileSignalControllers.valueAt(0).isVolteAvailable();
             boolean vowifi = mMobileSignalControllers.valueAt(0).isVowifiAvailable();
+            Log.w(TAG, "volte=" + volte + " vowifi=" + vowifi);
             cb.setImsIcon(new ImsIconState(volte && showVolte,
                     vowifi && showVowifi,
                     volte && showVolte ? R.drawable.stat_sys_volte : 0,
@@ -574,8 +575,8 @@ public class NetworkControllerImpl extends BroadcastReceiver
         boolean showVolte = true;
         boolean showVowifi = true;
         if (mMobileSignalControllers.size() == 2) {
-            boolean volte1 = mMobileSignalControllers.valueAt(0).isVolteShowing();
-            boolean volte2 = mMobileSignalControllers.valueAt(1).isVolteShowing();
+            boolean volte1 = mMobileSignalControllers.valueAt(0).isVolteAvailable();
+            boolean volte2 = mMobileSignalControllers.valueAt(1).isVolteAvailable();
             boolean vowifi1 = mMobileSignalControllers.valueAt(0).isVowifiAvailable();
             boolean vowifi2 = mMobileSignalControllers.valueAt(1).isVowifiAvailable();
             mCallbackHandler.setImsIcon(new ImsIconState((volte1 || volte2) && showVolte,
@@ -586,7 +587,7 @@ public class NetworkControllerImpl extends BroadcastReceiver
                     mContext
             ));
         } else if (mMobileSignalControllers.size() == 1) {
-            boolean volte = mMobileSignalControllers.valueAt(0).isVolteShowing();
+            boolean volte = mMobileSignalControllers.valueAt(0).isVolteAvailable();
             boolean vowifi = mMobileSignalControllers.valueAt(0).isVowifiAvailable();
             mCallbackHandler.setImsIcon(new ImsIconState(volte && showVolte,
                     vowifi && showVowifi,
@@ -928,6 +929,7 @@ public class NetworkControllerImpl extends BroadcastReceiver
         }
         mWifiSignalController.notifyListeners();
         mEthernetSignalController.notifyListeners();
+        updateImsIcon();
     }
 
     /**
